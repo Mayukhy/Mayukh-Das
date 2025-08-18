@@ -14,7 +14,7 @@
   display: none;
 }
 
-.custom-banner-header__cta {
+.btn.custom-banner-header__cta {
   text-decoration: none;
   max-width: 20.7rem;
   display: flex;
@@ -33,7 +33,7 @@
     display: block;
   }
   .custom-banner-header__subtitle,
-  .custom-banner-header__cta {
+  .btn.custom-banner-header__cta {
     display: none;
   }
 }

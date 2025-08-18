@@ -1,0 +1,124 @@
+{% comment %}
+  title: Custom Content Banner
+  Description: A customizable banner section for showcasing content like image, text, and calls to action.
+{% endcomment %}
+
+{{ 'custom-content-banner.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  .custom-content-banner__main {
+    background-color: {{ section.settings.banner_background_color }};
+  }
+{% endstyle %}
+
+<div
+  class="custom-content-banner__main"
+>
+  {% comment %} Banner Content {% endcomment %}
+  <div class="custom-content-banner__content">
+    <h1 class="h1">{{ section.settings.banner_title }}</h1>
+    <p class="banner-desc desktop">{{ section.settings['banner_content-desktop'] }}</p>
+    <p class="banner-desc mobile">{{ section.settings['banner_content-mobile'] }}</p>
+    {% comment %} Banner CTA {% endcomment %}
+    <a class="btn primary custom-content-banner__cta" href="{{ section.settings.banner_cta_link }}">
+      {{ section.settings.banner_cta_text }}
+      <svg width="28" height="13" viewBox="0 0 28 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.11108 5.74402L0.361084 5.74402L0.361084 7.24402L1.11108 7.24402L1.11108 5.74402ZM27.1487 7.02435C27.4416 6.73146 27.4416 6.25658 27.1487 5.96369L22.3757 1.19072C22.0828 0.897826 21.6079 0.897826 21.315 1.19072C21.0221 1.48361 21.0221 1.95849 21.315 2.25138L25.5577 6.49402L21.315 10.7367C21.0221 11.0296 21.0221 11.5044 21.315 11.7973C21.6079 12.0902 22.0828 12.0902 22.3757 11.7973L27.1487 7.02435ZM1.11108 7.24402L26.6183 7.24402L26.6183 5.74402L1.11108 5.74402L1.11108 7.24402Z" fill="white"/>
+      </svg>
+    </a>
+  </div>
+
+  {% comment %} banner Image {% endcomment %}
+  <div class="custom-content-banner__image--desktop">
+    {% if section.settings['banner_image-desktop'] %}
+      {{ section.settings['banner_image-desktop'] | image_url: width: 3840 | image_tag }}
+    {% else %}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </div>
+  <div class="custom-content-banner__image--mobile">
+    {% if section.settings['banner_image-mobile'] %}
+      {{ section.settings['banner_image-mobile'] | image_url: width: 3840 | image_tag }}
+    {% else %}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </div>
+
+  {% comment %} Bottom Promotional Text {% endcomment %}
+  <div class="custom-content-banner__bottom-text">
+    <p class="banner-subtitle desktop">{{ section.settings['banner_bottom_text-desktop'] }}</p>
+    <p class="banner-subtitle mobile">{{ section.settings['banner_bottom_text-mobile'] }}</p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Content Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Banner Title",
+      "default": "Welcome to Our Store"
+    },
+    {
+      "type": "textarea",
+      "id": "banner_content-desktop",
+      "label": "Banner Content (Desktop)",
+      "default": "This is a custom content banner."
+    },
+    {
+      "type": "textarea",
+      "id": "banner_content-mobile",
+      "label": "Banner Content (Mobile)",
+      "default": "This is a custom content banner."
+    },
+    {
+      "type": "color",
+      "id": "banner_background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image-desktop",
+      "label": "Banner Image (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image-mobile",
+      "label": "Banner Image (Mobile)"
+    },
+    {
+      "type": "url",
+      "id": "banner_cta_link",
+      "label": "CTA Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "banner_cta_text",
+      "label": "CTA Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "text",
+      "id": "banner_bottom_text-desktop",
+      "label": "Bottom Text (Desktop)",
+      "default": "This is the bottom promotional text."
+    },
+    {
+      "type": "text",
+      "id": "banner_bottom_text-mobile",
+      "label": "Bottom Text (Mobile)",
+      "default": "This is the bottom promotional text."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Content Banner",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
