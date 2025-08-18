@@ -184,6 +184,7 @@ input[type="radio"].modal-select-radio:hover {
   outline: none;
   border: none;
   font-family: var(--font-jost);
+  text-transform: uppercase;
 }
 
 :is(button, a).btn.primary {
@@ -192,18 +193,18 @@ input[type="radio"].modal-select-radio:hover {
   background: var(--gradient-primary-btn);
   background-position: right bottom;
   color: var(--color-lighter);
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   width: 100%;
 }
 
 :is(button, a).btn.secondary {
   position: relative;
-  background-size: 200% 100% !important;
+  background-size: 200% 110% !important;
   background: var(--gradient-secondary-btn);
   color: var(--color-dark);
   width: 100%;
   background-position: right bottom;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
 }
 
 .btn.primary:hover {
@@ -211,8 +212,16 @@ input[type="radio"].modal-select-radio:hover {
   color: var(--color-dark);
 }
 
+.btn.primary:hover svg path {
+  fill: var(--color-dark);
+}
+
 .btn.secondary:hover {
   background-position: left bottom;
   color: var(--color-lighter);
+}
+
+.btn.secondary:hover svg path {
+  fill: var(--color-light);
 }
 /* Buttons styles ends */

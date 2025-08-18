@@ -1,0 +1,39 @@
+.custom-banner-header__main {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 1rem 5.078rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-light);
+  width: 100%;
+}
+
+.custom-banner-header__hamburger-menu,
+.custom-banner-header__mobile-cta {
+  display: none;
+}
+
+.custom-banner-header__cta {
+  text-decoration: none;
+  max-width: 20.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1.16rem 2.1rem 1.16rem 4.1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .custom-banner-header__main {
+    padding: 2.3rem 1.6rem;
+  }
+  .custom-banner-header__hamburger-menu,
+  .custom-banner-header__mobile-cta {
+    display: block;
+  }
+  .custom-banner-header__subtitle,
+  .custom-banner-header__cta {
+    display: none;
+  }
+}
