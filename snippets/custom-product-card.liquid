@@ -1,0 +1,90 @@
+{% comment %}
+  Renders a custom product card
+  Accepts:
+  - product: {Object} Product Liquid object
+  - section_id: {String} Section ID for unique identification (optional)
+
+  Usage:
+  {% render 'custom-product-card', product: card_product %}
+{% endcomment %}
+
+{% assign product_form_id = 'quick-add-' | append: section_id | append: product.id %}
+{% assign product_handle_class = product.handle %}
+<div class="custom-product-card__main">
+  {%- if product.featured_image -%}
+    <div class="card__media">
+      {% comment %} Quick add modal opener {% endcomment %}
+      <custom-modal-opener
+        data-variants='{{ product.variants | json }}'
+        data-modal="custom-modal-opener-{{ product.id }}"
+      >
+        <button
+          id="{{ product_form_id }}-submit"
+          type="submit"
+          name="add"
+          class="custom-product-card__cta {{ product_handle_class }}"
+          aria-haspopup="dialog"
+          data-product-url="{{ product.url }}"
+        >
+          {% render 'icon-opener' %}
+        </button>
+      </custom-modal-opener>
+
+      {% comment %} Quick Add Modal {% endcomment %}
+      <custom-quick-add-modal
+        data-product-url="{{ product.url }}"
+        id="custom-quick-add-modal-{{ product.id }}"
+        class="custom-quick-add-modal"
+      >
+        {% comment %} Modal close Button {% endcomment %}
+        <div class="custom-quick-add-modal__close">
+           {% render 'icon-close' %}
+        </div>
+        <div
+          role="dialog"
+          aria-modal="true"
+          class="custom-quick-add-modal__content"
+          tabindex="-1"
+        >
+          <button
+            id="ModalClose-{{ product.id }}"
+            type="button"
+            class="quick-add-modal__toggle"
+            aria-label="{{ 'accessibility.close' | t }}"
+          >
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </button>
+          {% comment %} <div id="QuickAddInfo-{{ product.id }}" class="quick-add-modal__content-info"></div> {% endcomment %}
+        </div>
+      </custom-quick-add-modal>
+
+      <div class="media media--transparent media--hover-effect">
+        <a href="{{ product.url }}">
+          <img
+            srcset="
+              {%- if product.featured_image.width >= 165 -%}{{ product.featured_image | image_url: width: 165 }} 165w,{%- endif -%}
+              {%- if product.featured_image.width >= 330 -%}{{ product.featured_image | image_url: width: 330 }} 330w,{%- endif -%}
+              {%- if product.featured_image.width >= 535 -%}{{ product.featured_image | image_url: width: 535 }} 535w,{%- endif -%}
+              {%- if product.featured_image.width >= 750 -%}{{ product.featured_image | image_url: width: 750 }} 750w,{%- endif -%}
+              {%- if product.featured_image.width >= 1000 -%}{{ product.featured_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+              {%- if product.featured_image.width >= 1500 -%}{{ product.featured_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+              {%- if product.featured_image.width >= 3000 -%}{{ product.featured_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+              {{ product.featured_image | image_url }} {{ product.featured_image.width }}w
+            "
+            src="{{ product.featured_image | image_url: width: 1500 }}"
+            sizes="
+              (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns }}px,
+              (min-width: 750px) {% if columns > 1 %}calc((100vw - 10rem) / 2){% else %}calc(100vw - 10rem){% endif %},
+              calc(100vw - 3rem)
+            "
+            alt="{{ product.featured_image.alt | escape }}"
+            height="{{ product.featured_image.height }}"
+            width="{{ product.featured_image.width }}"
+            loading="lazy"
+            class="motion-reduce"
+          >
+        </a>
+      </div>
+    </div>
+  {%- endif -%}
+</div>

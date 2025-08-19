@@ -15,11 +15,13 @@ body {
   --color-dark-grey: #333333;
   --color-light: #ffffff;
   --color-lighter: #f5f5f5;
+  --color-light-gray: #F8F8F8E5;
   --color-light-yellow: #fff544;
 
   /* gradients */
   --gradient-primary-btn: linear-gradient(to right, var(--color-light-yellow) 50%, var(--color-dark) 50%);
   --gradient-secondary-btn: linear-gradient(to right, var(--color-dark) 50%, var(--color-light-yellow) 50%);
+  --gradient-overlay: rgba(39, 39, 39, 0.483);
 }
 
 /* Typography / modal styles starts */
@@ -225,3 +227,11 @@ input[type="radio"].modal-select-radio:hover {
   fill: var(--color-light);
 }
 /* Buttons styles ends */
+
+.is-open {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}

@@ -1,0 +1,95 @@
+.custom-product-card__main {
+  position: relative;
+}
+
+.custom-product-card__main .card__media {
+  aspect-ratio: 433 / 444;
+  position: static;
+}
+
+.custom-product-card__main .card__media .media {
+  width: 100%;
+  height: 100%;
+}
+
+.custom-quick-add-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  z-index: -1;
+  width: 31.1rem;
+  height: 44.7rem;
+}
+
+.custom-quick-add-modal.is-open {
+  opacity: 1;
+  z-index: 100;
+  background-color: var(--color-light);
+}
+.custom-quick-add-modal__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1.27rem 1.27rem 0 0;
+  cursor: pointer;
+}
+
+.custom-product-card__cta {
+  background-color: var(--color-light-gray);
+  position: absolute;
+  z-index: 10;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.custom-product-card__cta.black-leather-bag {
+  left: 60%;
+  top: 55%;
+}
+
+.custom-product-card__cta.blue-silk-tuxedo {
+  left: 82%;
+  top: 50%;
+}
+
+.custom-product-card__cta.chequered-red-shirt {
+  left: 60%;
+  top: 20%;
+}
+
+.custom-product-card__cta.classic-leather-jacket {
+  left: 69%;
+  top: 15%;
+}
+
+.custom-product-card__cta.classic-varsity-top {
+  left: 49%;
+  top: 25%;
+}
+
+.custom-product-card__cta.dark-denim-top {
+  left: 75%;
+  top: 37%;
+}
+
+@media screen and (max-width: 768px) {
+  .custom-product-list__item .card__media {
+    aspect-ratio: 169 / 186;
+  }
+  .custom-product-card__cta {
+    width: 1.57rem;
+    height: 1.57rem;
+  }
+  .custom-product-card__cta svg {
+    width: 0.6rem;
+    height: 0.6rem;
+  }
+}

@@ -1,0 +1,67 @@
+{% comment %}
+  Title: Custom Product List
+  Description: A list of custom product cards configurable using blocks upto "6" with quick view modal.
+{% endcomment %}
+
+{{ 'custom-product-list.css' | asset_url | stylesheet_tag }}
+{{ 'custom-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'customQuickAddModal.js' | asset_url }}" defer></script>
+<script src="{{ 'customModalOpener.js' | asset_url }}" defer></script>
+
+{% comment %} Quick Add Modal gradient overlay {% endcomment %}
+<div class="custom-modal-overlay">
+</div>
+
+<div class="custom-product-list__main">
+  <div class="custom-product-list__header">
+    <h2 class="h2 custom-product-list__title">{{ section.settings.custom_list_title }}</h2>
+  </div>
+  <ul class="custom-product-list__container">
+    {% for block in section.blocks %}
+      <li class="custom-product-list__item">
+        {% assign card_product = block.settings.product %}
+        {% render 'custom-product-card', product: card_product, section_id: section.id %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% schema %}
+{
+  "name": "Custom Product List",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product List Settings"
+    },
+    {
+      "type": "text",
+      "id": "custom_list_title",
+      "label": "Section Title",
+      "default": "Tisso vison in the wild"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product List",
+      "category": "Custom",
+      "blocks": [{ "type": "product" }, { "type": "product" }, { "type": "product" }]
+    }
+  ]
+}
+{% endschema %}
