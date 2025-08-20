@@ -21,6 +21,7 @@
   z-index: -1;
   width: 31.1rem;
   height: 44.7rem;
+  padding: 3.6rem 2rem 2.5rem 2rem;
 }
 
 .custom-quick-add-modal.is-open {
@@ -78,6 +79,155 @@
 .custom-product-card__cta.dark-denim-top {
   left: 75%;
   top: 37%;
+}
+
+.custom-quick-add-modal__info-container {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.custom-quick-add-modal__image-container {
+  aspect-ratio: 120 / 140;
+  /* height: 14rem; */
+}
+
+.custom-quick-add-modal__image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.custom-quick-add-modal__title {
+  margin-top: 1.3rem;
+  margin-bottom: 2.2rem;
+}
+
+.custom-quick-add-modal__price {
+  margin-bottom: 1.3rem;
+}
+
+.custom-quick-add-modal__variants-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  margin-top: 1rem;
+  margin-bottom: 5.1rem;
+}
+
+.custom-quick-add-modal__option-values {
+  display: flex;
+}
+
+.custom-quick-add-modal__select-dropdown {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+.custom-quick-add-modal__select-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-quick-add-modal__option-select {
+  width: 27.1rem;
+}
+
+.custom-quick-add-modal__select-options {
+  position: absolute;
+  top: 100%;
+  opacity: 0;
+  z-index: -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 1.6rem;
+  width: 100%;
+  background-color: var(--color-light);
+  transition: all 0.3s ease;
+}
+
+.custom-quick-add-modal__select-options.is-open {
+  opacity: 1;
+  z-index: 100;
+}
+
+.custom-quick-add-modal__option-title {
+  margin-bottom: 0.6rem;
+}
+
+.custom-quick-add-modal__select-options label,
+.custom-quick-add-modal__option-values label {
+  position: relative;
+  width: 100%;
+}
+
+.custom-quick-add-modal__select-options label .custom-quick-add-modal__option-value,
+.custom-quick-add-modal__option-values .custom-quick-add-modal__option-value {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.custom-quick-add-modal__option-color-code {
+  position: absolute;
+  width: 0.58rem;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-left: 0.05rem solid var(--color-dark);
+  border-right: 0.05rem solid var(--color-dark);
+}
+.custom-quick-add-modal__devider {
+  position: absolute;
+  right: 0;
+  width: 0.05rem;
+  height: 3.7rem;
+  margin-right: 4rem;
+  background-color: var(--color-dark);
+  transition: all 0.5s ease;
+}
+
+.custom-quick-add-modal__select-container svg {
+  transition: all 0.5s ease;
+}
+
+.custom-quick-add-modal__product-form {
+  width: calc(100% - 4rem);
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-bottom: 2.5rem;
+  transform: translateX(-50%);
+}
+
+.btn.custom-quick-add-modal__submit {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.8rem;
+  padding: 1.16rem 2.1rem 1.16rem 7.4rem;
+}
+
+.btn.custom-quick-add-modal__submit svg path{
+  fill: var(--color-light);
+}
+
+@keyframes rotateForward {
+  100% {transform: rotate(180deg);}
+}
+
+@keyframes rotateBackward {
+  0% {transform: rotate(180deg);}
+  100% {transform: rotate(0deg);}
 }
 
 @media screen and (max-width: 768px) {

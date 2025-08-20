@@ -21,6 +21,7 @@ body {
   /* gradients */
   --gradient-primary-btn: linear-gradient(to right, var(--color-light-yellow) 50%, var(--color-dark) 50%);
   --gradient-secondary-btn: linear-gradient(to right, var(--color-dark) 50%, var(--color-light-yellow) 50%);
+  --gradient-radio: linear-gradient(to right, var(--color-dark) 50%, var(--color-light) 50%);
   --gradient-overlay: rgba(39, 39, 39, 0.483);
 }
 
@@ -83,7 +84,7 @@ h2,
 
 .modal-desc {
   font-weight: 300;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   line-height: 110%;
   letter-spacing: -1%;
   color: var(--color-dark);
@@ -91,15 +92,16 @@ h2,
 }
 
 .radio-label {
+  display: flex;
   font-weight: 400;
   font-size: 1.4rem;
   line-height: 130%;
-  letter-spacing: 0%;
+  letter-spacing: 0;
   color: var(--color-dark-grey);
   font-family: var(--font-jost);
 }
 
-input[type="radio"].modal-radio {
+.modal-radio {
   padding: 1rem 1.5rem;
   font-weight: 400;
   font-size: 1.8rem;
@@ -108,13 +110,49 @@ input[type="radio"].modal-radio {
   color: var(--color-dark);
   font-family: var(--font-jost);
   text-transform: capitalize;
-  border: var(--color-dark) solid 0.1rem;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  overflow-x: hidden;
+}
+/* Animated background layer */
+.modal-radio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-dark-grey);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(.77,0,.18,1);
+  z-index: -1;
+  overflow-x: hidden;
 }
 
-input[type="radio"].modal-radio:checked {
+/* Checked label text color */
+input[type="radio"]:checked + .modal-radio {
+  color: var(--color-light);
+}
+
+/* Animate background left to right on check */
+input[type="radio"]:checked + .modal-radio::before {
+  transform: translateX(0);
+}
+
+.modal-radio:not(:last-of-type) {
+  border-top: var(--color-dark) solid 0.1rem;
+  border-right: 0;
+  border-bottom: var(--color-dark) solid 0.1rem;
+  border-left: var(--color-dark) solid 0.1rem;
+}
+
+.modal-radio:last-of-type {
+  border-top: var(--color-dark) solid 0.1rem;
+  border-left: 0;
+  border-bottom: var(--color-dark) solid 0.1rem;
+  border-right: var(--color-dark) solid 0.1rem;
+}
+
+input[type="radio"]:checked + label {
   background-color: var(--color-dark);
-  color: var(--color-white);
+  color: var(--color-light);
 }
 
 .modal-select-container {
@@ -128,7 +166,7 @@ input[type="radio"].modal-radio:checked {
   border: var(--color-dark) solid 0.1rem;
 }
 
-input[type="radio"].modal-select-radio {
+.modal-select-radio {
   padding: 1rem 0;
   font-weight: 400;
   font-size: 1.6rem;
@@ -138,11 +176,12 @@ input[type="radio"].modal-select-radio {
   font-family: var(--font-jost);
   text-transform: capitalize;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-input[type="radio"].modal-select-radio:hover {
+.modal-select-radio:hover {
   background-color: var(--color-dark);
-  color: var(--color-white);
+  color: var(--color-light);
 }
 
 /* Typography / modal styles ends */

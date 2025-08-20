@@ -101,6 +101,10 @@ if (!customElements.get('product-form')) {
           })
           .finally(() => {
             this.submitButton.classList.remove('loading');
+
+            // Close the custom quick add modal if present
+            this.closest('custom-quick-add-modal')?.closeModal();
+
             if (this.cart && this.cart.classList.contains('is-empty')) this.cart.classList.remove('is-empty');
             if (!this.error) this.submitButton.removeAttribute('aria-disabled');
             this.querySelector('.loading__spinner').classList.add('hidden');
