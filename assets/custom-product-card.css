@@ -114,10 +114,6 @@
   margin-bottom: 5.1rem;
 }
 
-.custom-quick-add-modal__option-values {
-  display: flex;
-}
-
 .custom-quick-add-modal__select-dropdown {
   display: flex;
   flex-direction: column;

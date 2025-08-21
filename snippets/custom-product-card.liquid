@@ -10,6 +10,8 @@
 {% assign variant_colors = product.metafields.custom.variant_color_code.value | json %}
 {% assign product_form_id = 'quick-add-' | append: section_id | append: product.id %}
 {% assign product_handle_class = product.handle %}
+
+{% render 'pill-styles' product: product, product_form_id: product_form_id %}
 <div class="custom-product-card__main">
   {%- if product.featured_image -%}
     <div class="card__media">
@@ -72,7 +74,7 @@
                   {% if option.name != "Size" %}
                     <div class="custom-quick-add-modal__option">
                       <span class="radio-label custom-quick-add-modal__option-title">{{ option.name }}</span>
-                      <div class="custom-quick-add-modal__option-values">
+                      <div data-option="Color-{{ product_form_id }}" class="custom-quick-add-modal__option-values option-group">
                         {% for value in option.values %}
                           <input
                           data-idx="{{ forloop.index }}"
@@ -92,6 +94,9 @@
                         {% endif %}
                           </label>
                         {% endfor %}
+                        {% comment %} For pill animation transition {% endcomment %}
+                        <div class="highlight">
+                        </div>
                       </div>
                     </div>
                   {% else %}

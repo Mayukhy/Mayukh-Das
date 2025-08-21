@@ -114,27 +114,6 @@ h2,
   cursor: pointer;
   overflow-x: hidden;
 }
-/* Animated background layer */
-.modal-radio::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--color-dark-grey);
-  transform: translateX(-100%);
-  transition: transform 0.4s cubic-bezier(.77,0,.18,1);
-  z-index: -1;
-  overflow-x: hidden;
-}
-
-/* Checked label text color */
-input[type="radio"]:checked + .modal-radio {
-  color: var(--color-light);
-}
-
-/* Animate background left to right on check */
-input[type="radio"]:checked + .modal-radio::before {
-  transform: translateX(0);
-}
 
 .modal-radio:not(:last-of-type) {
   border-top: var(--color-dark) solid 0.1rem;
@@ -148,11 +127,6 @@ input[type="radio"]:checked + .modal-radio::before {
   border-left: 0;
   border-bottom: var(--color-dark) solid 0.1rem;
   border-right: var(--color-dark) solid 0.1rem;
-}
-
-input[type="radio"]:checked + label {
-  background-color: var(--color-dark);
-  color: var(--color-light);
 }
 
 .modal-select-container {
