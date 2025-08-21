@@ -4,6 +4,17 @@
 {% endcomment %}
 
 {{ 'custom-banner-header.css' | asset_url | stylesheet_tag }}
+
+{% capture cart_toggle_class %}
+  {% if section.settings.banner_show_cart_icon %}
+    header__icon--cart--true
+  {% else %}
+    header__icon--cart--false
+  {% endif %}
+{% endcapture %}
+{% assign cart = cart %}
+
+<script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
 <nav class="custom-banner-header__main">
   {% comment %} hamburger-menu  {% endcomment %}
     <div class="custom-banner-header__hamburger-menu">
@@ -30,9 +41,23 @@
     {% render "cta-next" %}
   </a>
 
-  {% comment %} place holder for mobile CTA  {% endcomment %}
-  <div class="custom-banner-header__mobile-cta">
-  </div>
+  {% comment %} cart icon {% endcomment %}
+  <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart {{ cart_toggle_class }} link focus-inset" id="cart-icon-bubble">
+    {% if cart == empty %}
+      <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
+    {% else %}
+      <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+    {% endif %}
+    <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+    {%- if cart != empty -%}
+      <div class="cart-count-bubble">
+        {%- if cart.item_count < 100 -%}
+          <span aria-hidden="true">{{ cart.item_count }}</span>
+        {%- endif -%}
+        <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+      </div>
+    {%- endif -%}
+  </a>
 </nav>
 
 {% schema %}
@@ -73,6 +98,12 @@
       "id": "banner_button_link",
       "label": "Button Link",
       "default": "/collections/all"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_show_cart_icon",
+      "label": "Show Cart Icon",
+      "default": false
     }
   ],
   "presets": [

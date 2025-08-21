@@ -12,9 +12,89 @@
 <script src="{{ 'customModalOpener.js' | asset_url }}" defer></script>
 <script src="{{ 'product-form.js' | asset_url }}" defer></script>
 
+{% assign upsell_product = settings.upsell_product %}
+{% assign upsell_product_form_id = 'quick-add-' | append: section.id | append: product.id %}
+
 {% comment %} Quick Add Modal gradient overlay {% endcomment %}
 <div class="custom-modal-overlay">
 </div>
+
+{% comment %} This product form is to add upsell product to the cart. {% endcomment %}
+<product-form
+data-product-id="{{ upsell_product.id }}"
+class="product-form upsell-product-form"
+data-hide-errors="{{ gift_card_recipient_feature_active }}"
+data-section-id="{{ section.id }}"
+>
+  <div class="product-form__error-message-wrapper" role="alert" hidden>
+    <span class="svg-wrapper">
+      {{- 'icon-error.svg' | inline_asset_content -}}
+    </span>
+    <span class="product-form__error-message"></span>
+  </div>
+  {%- form 'product',
+    upsell_product,
+    id: upsell_product_form_id,
+    class: 'form',
+    novalidate: 'novalidate',
+    data-type: 'add-to-cart-form'
+  -%}
+    <input
+      type="hidden"
+      name="id"
+      value="{{ upsell_product.selected_or_first_available_variant.id }}"
+      {% if upsell_product.selected_or_first_available_variant.available == false
+        or quantity_rule_soldout
+        or upsell_product.selected_or_first_available_variant == null
+      %}
+        disabled
+      {% endif %}
+      class="product-variant-id"
+    >
+
+    {%- if gift_card_recipient_feature_active -%}
+      {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+    {%- endif -%}
+
+    <div class="product-form__buttons">
+      {%- liquid
+        assign check_against_inventory = true
+        if upsell_product.selected_or_first_available_variant.inventory_management != 'shopify' or upsell_product.selected_or_first_available_variant.inventory_policy == 'continue'
+          assign check_against_inventory = false
+        endif
+        if upsell_product.selected_or_first_available_variant.quantity_rule.min > upsell_product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+          assign quantity_rule_soldout = true
+        endif
+      -%}
+      <button
+        id="ProductSubmitButton-{{ section.id }}"
+        type="submit"
+        name="add"
+        class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+        {% if upsell_product.selected_or_first_available_variant.available == false
+          or quantity_rule_soldout
+          or upsell_product.selected_or_first_available_variant == null
+        %}
+          disabled
+        {% endif %}
+      >
+        <span>
+          {%- if upsell_product.selected_or_first_available_variant == null -%}
+            {{ 'products.product.unavailable' | t }}
+          {%- elsif upsell_product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- else -%}
+            {{ 'products.product.add_to_cart' | t }}
+          {%- endif -%}
+        </span>
+        {%- render 'loading-spinner' -%}
+      </button>
+      {%- if show_dynamic_checkout -%}
+        {{ form | payment_button }}
+      {%- endif -%}
+    </div>
+  {%- endform -%}
+</product-form>
 
 <div class="custom-product-list__main">
   <div class="custom-product-list__header">
@@ -42,6 +122,12 @@
       "id": "custom_list_title",
       "label": "Section Title",
       "default": "Tisso vison in the wild"
+    },
+    {
+      "type": "checkbox",
+      "id": "autofill_first_variant",
+      "label": "Auto Select First available Variant at quick add modal",
+      "default": false
     }
   ],
   "blocks": [

@@ -117,14 +117,14 @@ h2,
 
 .modal-radio:not(:last-of-type) {
   border-top: var(--color-dark) solid 0.1rem;
-  border-right: 0;
+  border-right: none;
   border-bottom: var(--color-dark) solid 0.1rem;
-  border-left: var(--color-dark) solid 0.1rem;
+  border-left: none;
 }
 
 .modal-radio:last-of-type {
   border-top: var(--color-dark) solid 0.1rem;
-  border-left: 0;
+  border-left: none;
   border-bottom: var(--color-dark) solid 0.1rem;
   border-right: var(--color-dark) solid 0.1rem;
 }
@@ -222,21 +222,21 @@ h2,
   transition: all 0.4s ease;
 }
 
-.btn.primary:hover {
+.btn.primary:not(:disabled):hover {
   background-position: left bottom;
   color: var(--color-dark);
 }
 
-.btn.primary:hover svg path {
+.btn.primary:not(:disabled):hover svg path {
   fill: var(--color-dark);
 }
 
-.btn.secondary:hover {
+.btn.secondary:not(:disabled):hover {
   background-position: left bottom;
   color: var(--color-lighter);
 }
 
-.btn.secondary:hover svg path {
+.btn.secondary:not(:disabled):hover svg path {
   fill: var(--color-light);
 }
 /* Buttons styles ends */

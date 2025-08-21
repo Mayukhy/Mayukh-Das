@@ -15,12 +15,13 @@ class CustomQuickAddModal extends HTMLElement {
     this.selectRadioOpener = this.querySelector(".custom-quick-add-modal__select-container");
     this.selectRadioElementsContainer = this.querySelector(".custom-quick-add-modal__select-options")
     this.selectSVG = this.querySelector(".custom-quick-add-modal__select-container svg")
+    this.dropdownContainer = this.querySelector(".custom-quick-add-modal__select-container");
     this.activeDropdown = this.querySelector(".custom-quick-add-modal__select-container p");
     
     // State tracking
+    this.variantAutoSelect = this.dataset.variantAutofill === "true";
     this.selectedVariants = [];
     this.currentVariant = null;
-    this.lastCheckedIdx = 0
   }
 
   /**
@@ -28,12 +29,12 @@ class CustomQuickAddModal extends HTMLElement {
    * Initializes color variants and default selections
    */
   connectedCallback() {
-    this.closeButton.addEventListener("click", () => this.closeModal());
+    this.closeButton.addEventListener("click", () => this.closeWithOverlay());
     this.selectRadioOpener.addEventListener("click", () => this.toggleSelectOptions());
     this.addEventListener('change', this.changeVariant.bind(this));
     document
       .querySelector(".custom-modal-overlay")
-      .addEventListener("click", () => this.closeModal());
+      .addEventListener("click", () => this.closeWithOverlay());
     document.addEventListener("click", (event) => {
       event.target.closest(".custom-quick-add-modal__select-container") || this.closeSelectOptions();
     })
@@ -45,12 +46,12 @@ class CustomQuickAddModal extends HTMLElement {
    * Clean up event listeners when the element is removed from the DOM
    */
   disconnectedCallback() {
-    this.closeButton.removeEventListener("click", () => this.closeModal());
+    this.closeButton.removeEventListener("click", () => this.closeWithOverlay());
     this.selectRadioOpener.removeEventListener("click", () => this.toggleSelectOptions());
     this.removeEventListener('change', this.changeVariant.bind(this));
     document
       .querySelector(".custom-modal-overlay")
-      .removeEventListener("click", () => this.closeModal());
+      .removeEventListener("click", () => this.closeWithOverlay());
     document.removeEventListener("click", (event) => {
       event.target.closest(".custom-quick-add-modal__select-container") || this.closeSelectOptions();
     })
@@ -63,16 +64,28 @@ class CustomQuickAddModal extends HTMLElement {
   openModal(modal) {
     modal.classList.add("is-open");
     document.querySelector(".custom-modal-overlay").classList.add("is-open");
-    document.body.style.overflow = "hidden";
+    document.body.classList.add("overflow-hidden");
   }
 
   /**
    * Closes the modal and restores body scrolling
    */
   closeModal() {
+    const { type } = window.cart;
     this.classList.remove("is-open");
     document.querySelector(".custom-modal-overlay").classList.remove("is-open");
-    document.body.style.overflow = "auto";
+    type !== "drawer" && document.body.classList.remove("overflow-hidden");
+    !this.variantAutoSelect && this.resetVariantSelection();
+  }
+
+  /**
+   * only Closes the modal when clicking on the overlay
+   */
+  closeWithOverlay() {
+    this.classList.remove("is-open");
+    document.querySelector(".custom-modal-overlay").classList.remove("is-open");
+    document.body.classList.remove("overflow-hidden")
+    !this.variantAutoSelect && this.resetVariantSelection();
   }
 
   /**
@@ -114,6 +127,13 @@ class CustomQuickAddModal extends HTMLElement {
    */
   initializeSelectedVariants() {
     this.updateSelectedVariants();
+    // Select the first radio in each option group (color, size)
+    this.variantAutoSelect && this.resetVariantSelection(
+      [".custom-quick-add-modal__option-values input[type='radio']",
+       ".custom-quick-add-modal__select-options input[type='radio']"
+      ]
+    );
+
   }
 
   /**
@@ -123,6 +143,9 @@ class CustomQuickAddModal extends HTMLElement {
   changeVariant(event) {
     const selectedRadio = event.target;
     if (selectedRadio.name && selectedRadio.name.startsWith("option-")) {
+      if (!this.currentVariant && selectedRadio.classList.contains("select__option-value")) {
+        this.activeDropdown.textContent = selectedRadio.value;
+      }
       this.updateSelectedVariants();
     }
   }
@@ -133,6 +156,7 @@ class CustomQuickAddModal extends HTMLElement {
    */
   updateSelectedVariants() {
     this.selectedVariants = [];
+    this.currentVariant = null;
     this.querySelectorAll("input[name^='option-']:checked").forEach((radio) => {
         this.selectedVariants.push(radio.value);
     });
@@ -146,8 +170,59 @@ class CustomQuickAddModal extends HTMLElement {
    */
   setCurrentVariant() {
     this.currentVariant = this.productVariants.find(variant => variant.options.every((option, idx) => this.selectedVariants[idx] === option));
+
+    if (!this.currentVariant) {
+      this.disableButton();
+    }
+    else {
+      this.enableButton();
+      this.setCurrentVariantId();
+      this.showSizeLabel();
+    }
+  }
+
+  /**
+   * Resets the variant selection to its initial state
+   * @param {[string]} classes - Array of class names to reset radio buttons state
+   */
+  resetVariantSelection(classes) {
+    if (this.variantAutoSelect && classes) {
+      setTimeout(() => {
+        classes.forEach((className) => {
+          this.querySelectorAll(className).forEach((radio, idx) => {
+            if (idx === 0) {
+              radio.checked = true;
+            } else {
+              radio.checked = false;
+            }
+          });
+        })
+      }, 100);
+    }
+    else {
+    this.selectedVariants = [];
+    this.currentVariant = null;
+    this.querySelectorAll("input[name^='option-']").forEach((radio) => {
+        radio.checked = false;
+    });
+    this.activeDropdown.textContent = window.sizeLabel.text;
+    this.querySelector("product-form .custom-quick-add-modal__variant-value-input").value = "";
+    this.disableButton();
+   }
+  }
+
+  /**
+   * Sets the current variant ID in the hidden input
+   */
+  setCurrentVariantId() {
     this.querySelector("product-form .custom-quick-add-modal__variant-value-input").value = this.currentVariant.id;
-    this.activeDropdown.textContent = this.currentVariant.option2;
+  }
+
+  /**
+   * Shows the size label in the dropdown
+   */
+  showSizeLabel() {
+    this.activeDropdown.textContent = this.currentVariant.option2 || `${window.sizeLabel.text}`;
   }
 
   /**
@@ -162,6 +237,22 @@ class CustomQuickAddModal extends HTMLElement {
    */
   rotateBackwardSVG() {
     this.selectSVG.style.animation = "rotateBackward 0.5s forwards";
+  }
+
+  /**
+   * Disables the submit button in the product form
+   * Used when no valid variant is selected
+   */
+  disableButton() {
+    this.querySelector("product-form button[type='submit']").disabled = true;
+  }
+
+  /**
+   * Enables the submit button in the product form
+   * Used when a valid variant is selected
+   */
+  enableButton() {
+    this.querySelector("product-form button[type='submit']").disabled = false;
   }
 }
 

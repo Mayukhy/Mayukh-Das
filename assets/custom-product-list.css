@@ -33,6 +33,11 @@
   z-index: 99;
 }
 
+.upsell-product-form {
+  opacity: 0;
+  z-index: -9;
+}
+
 @media screen and (max-width: 768px) {
   .custom-product-list__main {
     padding: 4rem 1.6rem;

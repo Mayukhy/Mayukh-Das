@@ -365,6 +365,19 @@
         recipientFormCollapsed: `{{ 'recipient.form.collapsed' | t }}`,
         countrySelectorSearchCount: `{{ 'localization.country_results_count' | t: count: '[count]' }}`,
       };
+
+      window.upsellProduct = {
+        enable: `{{ settings.enable_upsell }}`,
+        product: `{{ settings.upsell_product }}`,
+      };
+
+      window.sizeLabel = {
+        text: `{{ 'custom.quick_add_modal.size_label' | t }}`,
+      };
+
+      window.cart = {
+        type: `{{ settings.cart_type }}`,
+      }
     </script>
 
     {%- if settings.predictive_search_enabled -%}

@@ -8,6 +8,23 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
+    "name": "Product Upsell",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_upsell",
+        "label": "Enable Product Upsell",
+        "default": true,
+        "info": "When a product with variant options Black and Medium is added to the cart the “Soft Winter Jacket” should also be automatically added to the cart"
+      },
+      {
+        "type": "product",
+        "id": "upsell_product",
+        "label": "Upsell Product"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.logo.name",
     "settings": [
       {

@@ -1,5 +1,6 @@
 .custom-banner-header__main {
   max-width: 1440px;
+  position: relative;
   margin: 0 auto;
   padding: 1rem 5.078rem;
   display: flex;
@@ -24,6 +25,28 @@
   padding: 1.16rem 2.1rem 1.16rem 4.1rem;
 }
 
+.custom-banner-header__main .header__icon--cart {
+  position: absolute;
+  right: 0;
+  margin-right: 21.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.btn.secondary:not(:disabled):hover +.header__icon--cart svg path {
+  fill: var(--color-light);
+}
+
+.custom-banner-header__main .header__icon--cart.header__icon--cart--true {
+  opacity: 1;
+  z-index: 1;
+}
+
+.custom-banner-header__main .header__icon--cart.header__icon--cart--false {
+  opacity: 0;
+  z-index: -9;
+}
+
 @media screen and (max-width: 768px) {
   .custom-banner-header__main {
     padding: 2.3rem 1.6rem;
@@ -35,5 +58,10 @@
   .custom-banner-header__subtitle,
   .btn.custom-banner-header__cta {
     display: none;
+  }
+  .custom-banner-header__main .header__icon--cart {
+    position: relative;
+    margin-right: 0;
+    margin-top: -0.5rem;
   }
 }

@@ -24,7 +24,15 @@
       z-index: 1;
     }
 
-    .option-group input:nth-of-type(n):checked ~ .highlight {
+    .option-group input:not(:checked) ~ .highlight {
+      opacity: 0;
+    }
+
+    .option-group input:checked ~ .highlight {
+      opacity: 1;
+    }
+
+    .option-group input:nth-of-type(1):checked ~ .highlight {
       transform: translateX(0%);
     }
 
@@ -48,6 +56,18 @@
       transform: translateX(500%);
     }
 
-    .option-group input:nth-of-type(n):checked + label {
+    .option-group input:nth-of-type(7):checked ~ .highlight {
+      transform: translateX(600%);
+    }
+
+    .option-group input:nth-of-type(8):checked ~ .highlight {
+      transform: translateX(700%);
+    }
+
+    .option-group input:nth-of-type(9):checked ~ .highlight {
+      transform: translateX(800%);
+    }
+
+    .option-group input:checked + label {
       color: var(--color-light);
     }
