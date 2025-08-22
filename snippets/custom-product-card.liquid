@@ -7,10 +7,12 @@
   Usage:
   {% render 'custom-product-card', product: card_product %}
 {% endcomment %}
-{% assign variant_colors = product.metafields.custom.variant_color_code.value | json %}
-{% assign product_form_id = 'quick-add-' | append: section_id | append: product.id %}
-{% assign product_handle_class = product.handle %}
 
+{% liquid
+  assign variant_colors = product.metafields.custom.variant_color_code.value | json
+  assign product_form_id = 'quick-add-' | append: section_id | append: product.id
+  assign product_handle_class = product.handle
+%}
 {% render 'pill-styles' product: product, product_form_id: product_form_id %}
 <div class="custom-product-card__main">
   {%- if product.featured_image -%}
@@ -89,7 +91,7 @@
                           <label
                           for="product-{{ product.id }}-option-{{ option.name | escape }}-{{ value | escape }}"
                           class="modal-radio">{{ value }}
-                          {% if variant_colors %}
+                          {% if variant_colors and option.name == "Color" %}
                             <span
                             data-loop-id="{{ forloop.index }}"
                             class="custom-quick-add-modal__option-color-code">
