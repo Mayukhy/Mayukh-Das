@@ -23,7 +23,7 @@
           id="{{ product_form_id }}-submit"
           type="submit"
           name="add"
-          class="custom-product-card__cta {{ product_handle_class }}"
+          class="custom-product-card__cta {{ product_handle_class }} fixed--mobile"
           aria-haspopup="dialog"
           data-product-url="{{ product.url }}"
         >
@@ -65,7 +65,7 @@
               </div>
               <div class="custom-quick-add-modal__details">
                 <p class="modal-title custom-quick-add-modal__title">{{ product.title }}</p>
-                <p class="modal-price custom-quick-add-modal__price">{{ product.price | money }}</p>
+                <p class="modal-price custom-quick-add-modal__price">{{ product.price | money_without_currency }} {{ localization.country.currency.symbol }}</p>
                 <p class="modal-desc custom-quick-add-modal__description">{{ product.description | strip_html | truncatewords: 20 }}</p>
               </div>
             </div>

@@ -75,7 +75,6 @@ class CustomQuickAddModal extends HTMLElement {
     this.classList.remove("is-open");
     document.querySelector(".custom-modal-overlay").classList.remove("is-open");
     type !== "drawer" && document.body.classList.remove("overflow-hidden");
-    !this.variantAutoSelect && this.resetVariantSelection();
   }
 
   /**
@@ -85,7 +84,6 @@ class CustomQuickAddModal extends HTMLElement {
     this.classList.remove("is-open");
     document.querySelector(".custom-modal-overlay").classList.remove("is-open");
     document.body.classList.remove("overflow-hidden")
-    !this.variantAutoSelect && this.resetVariantSelection();
   }
 
   /**
@@ -126,14 +124,33 @@ class CustomQuickAddModal extends HTMLElement {
    * Sets up initial variant selections when the modal is opened
    */
   initializeSelectedVariants() {
-    this.updateSelectedVariants();
-    // Select the first radio in each option group (color, size)
-    this.variantAutoSelect && this.resetVariantSelection(
+    setTimeout(() => {
+      this.iniasilizeFirstVariantOptions();
+    }, 100);
+  }
+
+  /**
+   * Initializes the first selected variant option when the modal is opened
+   */
+  iniasilizeFirstVariantOptions() {
+    //Resets the variant selection options
+    this.resetVariantSelection(
       [".custom-quick-add-modal__option-values input[type='radio']",
        ".custom-quick-add-modal__select-options input[type='radio']"
       ]
     );
+    // Set the first variant as selected
+    this.autoSelectFirstVariant();
+  }
 
+  /**
+   * Automatically selects the first variant option when the modal is opened
+   */
+  autoSelectFirstVariant() {
+    this.selectedVariants = [this.querySelectorAll(".custom-quick-add-modal__option-values input[type='radio']")[0].value,
+    this.querySelectorAll(".custom-quick-add-modal__select-options input[type='radio']")[0].value
+    ]
+    this.setCurrentVariant();
   }
 
   /**
@@ -152,15 +169,42 @@ class CustomQuickAddModal extends HTMLElement {
 
   /**
    * Updates the selected variants array based on currently checked radio buttons
+   * Autocompletes the selected variant options by matching variant in the this.productVariants
    * Triggers an update to the current variant
    */
   updateSelectedVariants() {
     this.selectedVariants = [];
     this.currentVariant = null;
     this.querySelectorAll("input[name^='option-']:checked").forEach((radio) => {
-        this.selectedVariants.push(radio.value);
+      this.selectedVariants.push(radio.value);
     });
+    this.autoCompleteVariantOptions();
     this.setCurrentVariant();
+    this.currentVariant && this.changePrice();
+  }
+
+  /**
+   * Auto-completes the selected variant options by finding the matching variant in the this.productVariants based on the current selection
+   */
+  autoCompleteVariantOptions() {
+    // Auto-complete selectedVariants if only one option is selected
+    if (this.selectedVariants.length === 1) {
+      // Find the first variant that includes the selected value
+      const found = this.productVariants.find(variant => variant.options.includes(this.selectedVariants[0]));
+      if (found) {
+        this.selectedVariants = [...found.options];
+      }
+    }
+  }
+
+  /**
+   * Updates the displayed price in the modal
+   */
+  changePrice() {
+    if (this.currentVariant) {
+      const priceElement = this.querySelector(".custom-quick-add-modal__price");
+      priceElement.textContent = `${Math.floor(this.currentVariant.price / 100).toFixed(2)} ${window.currency.symbol}`;
+    }
   }
 
   /**
@@ -177,8 +221,10 @@ class CustomQuickAddModal extends HTMLElement {
     else {
       this.enableButton();
       this.setCurrentVariantId();
-      this.showSizeLabel();
+      const selectOptions = this.querySelectorAll(".custom-quick-add-modal__select-options input[type='radio']:checked");
+      selectOptions.length > 0 && this.showSizeLabel();
     }
+    
   }
 
   /**
@@ -206,7 +252,7 @@ class CustomQuickAddModal extends HTMLElement {
         radio.checked = false;
     });
     this.activeDropdown.textContent = window.sizeLabel.text;
-    this.querySelector("product-form .custom-quick-add-modal__variant-value-input").value = "";
+    this.clearCurrentVariantId();
     this.disableButton();
    }
   }
@@ -216,6 +262,13 @@ class CustomQuickAddModal extends HTMLElement {
    */
   setCurrentVariantId() {
     this.querySelector("product-form .custom-quick-add-modal__variant-value-input").value = this.currentVariant.id;
+  }
+
+  /**
+   * Clears the current variant ID in the hidden input
+   */
+  clearCurrentVariantId() {
+    this.querySelector("product-form .custom-quick-add-modal__variant-value-input").value = "";
   }
 
   /**
@@ -256,4 +309,7 @@ class CustomQuickAddModal extends HTMLElement {
   }
 }
 
+/**
+ * Register the custom element with the browser
+ */
 customElements.define("custom-quick-add-modal", CustomQuickAddModal);

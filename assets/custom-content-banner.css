@@ -27,7 +27,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  margin: 0 0 5.1rem 10.1rem;
+  margin: 0 0 5.1rem 6.7rem;
   max-width: 48.3rem;
 }
 
@@ -87,3 +87,27 @@
     justify-content: center;
   }
 }
+
+@media screen and (min-width: 1440px) and (max-width: 3839px) {
+ .custom-content-banner__content {
+  margin: 0 0 5.1rem calc(6.7rem + (100vw - 1440px) / 2);
+ }
+}
+
+@media screen and (min-width: 3840px) {
+  .custom-content-banner__content {
+    padding: 0 0 21.9rem 37.6rem;
+    max-width: 150rem;
+    gap: 11.7rem;
+  }
+  .btn.custom-content-banner__cta {
+    padding: 3.2rem 3.2rem 3.2rem 12.9rem;
+    max-width: 51.7rem;
+    gap: 6.8rem;
+    font-size: 3.7rem;
+  }
+  .custom-content-banner__bottom-text {
+    padding: 2.6rem 0;
+  }
+}
+

@@ -187,6 +187,19 @@ h2,
   /* Typography / modal styles ends */
 }
 
+@media screen and (min-width: 3840px) {
+  h1,.h1 {
+    font-size: 16.4rem;
+  }
+
+  .banner-subtitle {
+    font-size: 4.267rem;
+  }
+  .banner-desc {
+    font-size: 4.7rem;
+  }
+}
+
 /* Buttons styles starts */
 :is(button, a).btn {
   box-sizing: border-box;
@@ -222,22 +235,34 @@ h2,
   transition: all 0.4s ease;
 }
 
-.btn.primary:not(:disabled):hover {
-  background-position: left bottom;
-  color: var(--color-dark);
+@media screen and (min-width: 769px) {
+  .btn.primary:not(:disabled):hover {
+    background-position: left bottom;
+    color: var(--color-dark);
+  }
+  
+  .btn.primary:not(:disabled):hover svg path {
+    fill: var(--color-dark);
+  }
+  
+  .btn.secondary:not(:disabled):hover {
+    background-position: left bottom;
+    color: var(--color-lighter);
+  }
+  
+  .btn.secondary:not(:disabled):hover svg path {
+    fill: var(--color-light);
+  }
 }
 
-.btn.primary:not(:disabled):hover svg path {
-  fill: var(--color-dark);
-}
-
-.btn.secondary:not(:disabled):hover {
-  background-position: left bottom;
-  color: var(--color-lighter);
-}
-
-.btn.secondary:not(:disabled):hover svg path {
-  fill: var(--color-light);
+@media screen and (min-width: 3840px) {
+ :is(button,a).btn:not(.custom-quick-add-modal__submit, .custom-content-banner__cta) {
+   font-size: 4.267rem;
+ }
+ :is(button,a).btn:not(.custom-quick-add-modal__submit) svg {
+    width: 6.4rem;
+    height: 3.6rem;
+ }
 }
 /* Buttons styles ends */
 

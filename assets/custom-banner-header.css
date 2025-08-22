@@ -65,3 +65,46 @@
     margin-top: -0.5rem;
   }
 }
+
+@media screen and (min-width: 3840px) {
+  .custom-banner-header__main {
+    padding: 6rem 37.6rem;
+    max-width: 100%;
+  }
+  
+  .custom-banner-header__main .header__icon--cart {
+    margin-right: 84rem;
+  }
+
+  .custom-banner-header__main .header__icon--cart .svg-wrapper {
+    width: 8.8rem;
+    height: 8.8rem;
+  }
+  .custom-banner-header__main .header__icon--cart svg {
+    width: 8.8rem;
+    height: 8.8rem;
+  }
+
+  .custom-banner-header__main .header__icon--cart .cart-count-bubble {
+    width: 4rem;
+    height: 4rem;
+    bottom: -1.3rem;
+  }
+
+  .btn.custom-banner-header__cta {
+    padding: 3.2rem 3.2rem 3.2rem 11.1rem;
+    max-width: 55.2rem;
+    gap: 4.7rem;
+  }
+
+  .custom-banner-header__logo {
+    width: 40.385rem;
+    height: 5rem;
+  }
+
+  .custom-banner-header__logo img {
+    width: 100%;
+    height: 100%;
+  }
+
+}

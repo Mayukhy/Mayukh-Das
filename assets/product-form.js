@@ -111,15 +111,15 @@ if (!customElements.get('product-form')) {
             const optVariantCondition = ['Black', 'M'];
             const customModal = this.closest('custom-quick-add-modal');
             const { currentlyAddedProduct } = this;
-            const { upsellProduct } = window;
-
+            const { enable, product } = window.upsellProduct;
+            const upsellEnable = enable === "true"
             // Check if the currently added product matches the upsell triggering condition
             const isUpsellMatch =
               currentlyAddedProduct &&
               currentlyAddedProduct.variant_options.length === optVariantCondition.length &&
               currentlyAddedProduct.variant_options.every((opt, i) => opt === optVariantCondition[i]);
 
-            if (isUpsellMatch && upsellProduct?.enable && upsellProduct?.product) {
+            if (isUpsellMatch && upsellEnable && product) {
               // Dispatch a custom event to trigger the upsell add-to-cart flow
               document.dispatchEvent(new CustomEvent('upsell:addProduct'));
             }

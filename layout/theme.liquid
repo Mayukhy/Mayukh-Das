@@ -378,6 +378,10 @@
       window.cart = {
         type: `{{ settings.cart_type }}`,
       }
+
+      window.currency = {
+        symbol: `{{ localization.country.currency.symbol }}`,
+      }
     </script>
 
     {%- if settings.predictive_search_enabled -%}
