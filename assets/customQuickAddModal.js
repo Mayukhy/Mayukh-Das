@@ -94,8 +94,10 @@ class CustomQuickAddModal extends HTMLElement {
     this.selectRadioElementsContainer.classList.toggle("is-open");
     if (this.selectRadioElementsContainer.classList.contains("is-open")) {
       this.rotateForwardSVG();
+      this.activeDropdown.textContent = `${window.sizeLabel.text}`;
     } else {
       this.rotateBackwardSVG();
+      this.showSizeLabel();
     }
   }
 
@@ -106,6 +108,8 @@ class CustomQuickAddModal extends HTMLElement {
   closeSelectOptions(){
     this.selectRadioElementsContainer.classList.remove("is-open");
     this.rotateBackwardSVG();
+    const selectOptions = this.querySelectorAll(".custom-quick-add-modal__select-options input[type='radio']:checked");
+    selectOptions.length > 0 && this.showSizeLabel();
   }
 
   /**
@@ -160,9 +164,6 @@ class CustomQuickAddModal extends HTMLElement {
   changeVariant(event) {
     const selectedRadio = event.target;
     if (selectedRadio.name && selectedRadio.name.startsWith("option-")) {
-      if (!this.currentVariant && selectedRadio.classList.contains("select__option-value")) {
-        this.activeDropdown.textContent = selectedRadio.value;
-      }
       this.updateSelectedVariants();
     }
   }
@@ -251,7 +252,7 @@ class CustomQuickAddModal extends HTMLElement {
     this.querySelectorAll("input[name^='option-']").forEach((radio) => {
         radio.checked = false;
     });
-    this.activeDropdown.textContent = window.sizeLabel.text;
+    this.activeDropdown.textContent = `${window.sizeLabel.text}`;
     this.clearCurrentVariantId();
     this.disableButton();
    }
