@@ -1,0 +1,116 @@
+{% comment %}
+    section: custom Banner Header
+    Description: This section displays a customizable banner header with a hamburger menu for mobile view, a logo, a subtitle, and a call-to-action button.
+{% endcomment %}
+
+{{ 'custom-banner-header.css' | asset_url | stylesheet_tag }}
+
+{% capture cart_toggle_class %}
+  {% if section.settings.banner_show_cart_icon %}
+    header__icon--cart--true
+  {% else %}
+    header__icon--cart--false
+  {% endif %}
+{% endcapture %}
+{% assign cart = cart %}
+
+<script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+<nav class="custom-banner-header__main">
+  {% comment %} hamburger-menu  {% endcomment %}
+    <div class="custom-banner-header__hamburger-menu">
+        {% render "hamburger-menu" %}
+    </div>
+  {% comment %} logo  {% endcomment %}
+  <div class="custom-banner-header__logo">
+    <a href="{{ shop.url }}" class="logo">
+      <img
+        width="151"
+        height="19"
+        src="{{ section.settings.banner_image | img_url: '151x19' }}"
+        alt="{{ shop.name }}"
+      >
+    </a>
+  </div>
+
+  {% comment %} subText  {% endcomment %}
+  <p class="banner-subtitle custom-banner-header__subtitle">{{ section.settings.banner_subtitle }}</p>
+
+  {% comment %} CTA  {% endcomment %}
+  <a class="btn secondary custom-banner-header__cta" href="{{ section.settings.banner_button_link }}">
+    {{ section.settings.banner_button_text }}
+    {% render "cta-next" %}
+  </a>
+
+  {% comment %} cart icon {% endcomment %}
+  <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart {{ cart_toggle_class }} link focus-inset" id="cart-icon-bubble">
+    {% if cart == empty %}
+      <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
+    {% else %}
+      <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+    {% endif %}
+    <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+    {%- if cart != empty -%}
+      <div class="cart-count-bubble">
+        {%- if cart.item_count < 100 -%}
+          <span aria-hidden="true">{{ cart.item_count }}</span>
+        {%- endif -%}
+        <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+      </div>
+    {%- endif -%}
+  </a>
+</nav>
+
+{% schema %}
+{
+  "name": "Custom Banner Header",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "banner_subtitle",
+      "label": "Banner Subtitle",
+      "default": "Find the ideal gift for your loved ones."
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner Image"
+    },
+    {
+      "type": "color",
+      "id": "banner_background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_show_button",
+      "label": "Show Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "banner_button_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "banner_button_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_show_cart_icon",
+      "label": "Show Cart Icon",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Banner Header",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

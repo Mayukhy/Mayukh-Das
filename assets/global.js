@@ -1330,3 +1330,16 @@ class CartPerformance {
     );
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    /**
+     * Handles the custom 'upsell:addProduct' event to programmatically submit the upsell product form.
+     * @param {CustomEvent} event - The custom event triggered when an upsell product should be added to cart.
+     */
+    document.addEventListener("upsell:addProduct", (event) => {
+      const upsellProductForm = document.querySelector(".upsell-product-form");
+      const submitBtn = upsellProductForm.querySelector("[type='submit']");
+      event.preventDefault();
+      submitBtn.click();
+    });
+})

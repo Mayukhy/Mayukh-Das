@@ -1,0 +1,30 @@
+{% comment %}
+  Pill styles for product options
+  Accepts:
+  - product: {Object} Product Liquid object}
+  - product_form_id: {String} Unique form identifier to scope styles
+
+  Usage:
+  {% render 'pill-styles', product:product, product_form_id:product_form_id  %}
+{% endcomment %}
+
+{% liquid
+ assign color_option = product.options_with_values | find: 'name', 'Color'
+ assign color_option_values = color_option.values
+
+ assign custom_option = product.options_with_values | last
+ assign custom_option_values = custom_option.values
+%}
+{% style %}
+  .option-group[data-option="Color-{{ product_form_id }}"] {
+    --pill-width: calc(100% / {{ color_option_values.size }});
+  }
+
+  .option-group[data-option="option-{{ product_form_id }}"] {
+    --pill-width: calc(100% / {{ custom_option_values.size }});
+  }
+
+  .option-group .highlight {
+    width: var(--pill-width);
+  }
+{% endstyle %}

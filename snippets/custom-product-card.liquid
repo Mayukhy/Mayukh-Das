@@ -1,0 +1,276 @@
+{% comment %}
+  Renders a custom product card
+  Accepts:
+  - product: {Object} Product Liquid object
+  - section_id: {String} Section ID for unique identification (optional)
+
+  Usage:
+  {% render 'custom-product-card', product: card_product %}
+{% endcomment %}
+
+{% liquid
+  assign variant_colors = product.metafields.custom.variant_color_code.value | json
+  assign product_form_id = 'quick-add-' | append: section_id | append: product.id
+  assign product_handle_class = product.handle
+%}
+{% render 'pill-styles' product: product, product_form_id: product_form_id %}
+<div class="custom-product-card__main">
+  {%- if product.featured_image -%}
+    <div class="card__media">
+      {% comment %} Quick add modal opener {% endcomment %}
+      <custom-modal-opener
+        data-modal="custom-modal-opener-{{ product.id }}"
+      >
+        <button
+          id="{{ product_form_id }}-submit"
+          type="submit"
+          name="add"
+          class="custom-product-card__cta {{ product_handle_class }} fixed--mobile"
+          aria-haspopup="dialog"
+          data-product-url="{{ product.url }}"
+        >
+          {% render 'icon-opener' %}
+        </button>
+      </custom-modal-opener>
+
+      {% comment %} Quick Add Modal {% endcomment %}
+      <custom-quick-add-modal
+        data-variant-autofill="{{ section.settings.autofill_first_variant }}"
+        data-variants='{{ product.variants | json }}'
+        data-color-variants='{{ variant_colors }}'
+        data-product-url="{{ product.url }}"
+        id="custom-quick-add-modal-{{ product.id }}"
+        class="custom-quick-add-modal"
+      >
+        {% comment %} Modal close Button {% endcomment %}
+        <div class="custom-quick-add-modal__close">
+           {% render 'icon-close' %}
+        </div>
+        <div
+          role="dialog"
+          aria-modal="true"
+          class="custom-quick-add-modal__content"
+          tabindex="-1"
+        >
+          {% comment %} product details and variants {% endcomment %}
+          <div id="custom-quick-add-modal-{{ product.id }}" class="quick-add-modal__content-info">
+            <div class="custom-quick-add-modal__info-container">
+              <div class="custom-quick-add-modal__image-container">
+                <img
+                  src="{{ product.featured_image | image_url: width: 500 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="custom-quick-add-modal__media"
+                  loading="lazy"
+                  width="500"
+                  height="500"
+                >
+              </div>
+              <div class="custom-quick-add-modal__details">
+                <p class="modal-title custom-quick-add-modal__title">{{ product.title }}</p>
+                <p class="modal-price custom-quick-add-modal__price">{{ product.price | money_without_currency }} {{ localization.country.currency.symbol }}</p>
+                <p class="modal-desc custom-quick-add-modal__description">{{ product.description | strip_html | truncatewords: 20 }}</p>
+              </div>
+            </div>
+            <div class="custom-quick-add-modal__variants-container">
+                {% for option in product.options_with_values %}
+                  {% capture option_class %}
+                    {% if option.name == "Color" %}
+                      color-option
+                    {% else %}
+                      custom-option
+                    {% endif %}
+                  {% endcapture %}
+                  {% capture radio_class %}
+                    {% if option.name == "Color" %}
+                      color-radio
+                    {% endif %}
+                      modal-radio
+                  {% endcapture %}
+                  {% comment %} Normal radio inputs for the options not named "Size" (for "Color") {% endcomment %}
+                  {% if option.name != "Size" %}
+                    <div class="custom-quick-add-modal__option">
+                      <span class="radio-label custom-quick-add-modal__option-title">{{ option.name }}</span>
+                      <div 
+                      {% if option.name == "Color" %}
+                        data-option="Color-{{ product_form_id }}"
+                      {% else %}
+                        data-option="option-{{ product_form_id }}"
+                      {% endif %}
+                      class="custom-quick-add-modal__option-values
+                       {{ option_class }} option-group">
+                        {% for value in option.values %}
+                          <input
+                          data-idx="{{ forloop.index }}"
+                          {% if section.settings.autofill_first_variant %}
+                            {% if forloop.index == 1 %}
+                              checked
+                            {% endif %}
+                          {% endif %}
+                          id="product-{{ product.id }}-option-{{ option.name | escape }}-{{ value | escape }}"
+                          class="custom-quick-add-modal__option-value" type="radio" name="option-{{ product.id }}-{{ option.name | escape }}" value="{{ value }}">
+                          <label
+                          for="product-{{ product.id }}-option-{{ option.name | escape }}-{{ value | escape }}"
+                          class="{{ radio_class }}">{{ value }}
+                          {% if variant_colors and option.name == "Color" %}
+                            <span
+                            data-loop-id="{{ forloop.index }}"
+                            class="custom-quick-add-modal__option-color-code">
+                            </span>
+                        {% endif %}
+                          </label>
+                        {% endfor %}
+                        {% comment %} For pill animation transition {% endcomment %}
+                        <div class="highlight">
+                        </div>
+                      </div>
+                    </div>
+                  {% else %}
+                    {% comment %} Radio with selectable options for "Size" {% endcomment %}
+                    <div class="custom-quick-add-modal__select-dropdown">
+                      <span class="radio-label custom-quick-add-modal__option-title">{{ option.name }}</span>
+                      
+                      {% comment %} Selectable options opener {% endcomment %}
+                      <div class="modal-select-container custom-quick-add-modal__select-container">
+                        <p>{{"custom.quick_add_modal.size_label" | t}}</p>
+                        <span class="custom-quick-add-modal__devider">
+                        </span>
+                        {% render 'icon-accord' %}
+                      </div>
+                      {% comment %} selectable options {% endcomment %}
+                      <div class="custom-quick-add-modal__select-options">
+                        {% for value in option.values %}
+                          <label
+                          for="product-{{ product.id }}-select-option-{{ option.name }}-{{ value | escape }}"
+                          class="modal-select-radio">
+                            {{ value }}
+                            <input
+                            {% if section.settings.autofill_first_variant %}
+                              {% if forloop.index == 1 %}
+                                checked
+                              {% endif %}
+                            {% endif %}
+                            id="product-{{ product.id }}-select-option-{{ option.name }}-{{ value | escape }}"
+                            class="custom-quick-add-modal__option-value select__option-value" type="radio" 
+                            name="option-{{ product.id }}-{{ option.name | escape }}"
+                            value="{{ value }}">
+                          </label>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+
+            </div>
+
+            {% comment %} Add to cart form component {% endcomment %}
+            <product-form
+              class="product-form custom-quick-add-modal__product-form"
+              data-hide-errors="{{ gift_card_recipient_feature_active }}"
+              data-section-id="{{ section_id }}"
+            >
+              <div class="product-form__error-message-wrapper" role="alert" hidden>
+                <span class="svg-wrapper">
+                  {{- 'icon-error.svg' | inline_asset_content -}}
+                </span>
+                <span class="product-form__error-message"></span>
+              </div>
+
+              {%- form 'product',
+                product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ product.selected_or_first_available_variant.id }}"
+                  {% if product.selected_or_first_available_variant.available == false
+                    or quantity_rule_soldout
+                    or product.selected_or_first_available_variant == null
+                  %}
+                    disabled
+                  {% endif %}
+                  class="product-variant-id custom-quick-add-modal__variant-value-input"
+                >
+
+                {%- if gift_card_recipient_feature_active -%}
+                  {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+                {%- endif -%}
+
+                <div class="product-form__buttons">
+                  {%- liquid
+                    assign check_against_inventory = true
+                    if product.selected_or_first_available_variant.inventory_management != 'shopify' or product.selected_or_first_available_variant.inventory_policy == 'continue'
+                      assign check_against_inventory = false
+                    endif
+                    if product.selected_or_first_available_variant.quantity_rule.min > product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+                      assign quantity_rule_soldout = true
+                    endif
+                  -%}
+                  <button
+                    id="ProductSubmitButton-{{ section_id }}"
+                    type="submit"
+                    name="add"
+                    class="product-form__submit btn primary custom-quick-add-modal__submit"
+                    {% if product.selected_or_first_available_variant.available == false
+                      or quantity_rule_soldout
+                      or product.selected_or_first_available_variant == null
+                    %}
+                      disabled
+                    {% endif %}
+                  >
+                    <span>
+                      {%- if product.selected_or_first_available_variant == null -%}
+                        {{ 'products.product.unavailable' | t }}
+                      {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+                        {{ 'products.product.sold_out' | t }}
+                      {%- else -%}
+                        {{ 'products.product.add_to_cart' | t }}
+                      {%- endif -%}
+                    </span>
+                    {%- render 'loading-spinner' -%}
+                    {% render 'cta-next' %}
+                  </button>
+                  {%- if show_dynamic_checkout -%}
+                    {{ form | payment_button }}
+                  {%- endif -%}
+                </div>
+              {%- endform -%}
+            </product-form>
+          </div>
+        </div>
+      </custom-quick-add-modal>
+       
+      {% comment %} Redirectable Product media {% endcomment %}
+      <div class="media media--transparent media--hover-effect">
+        <a href="{{ product.url }}">
+          <img
+            srcset="
+              {%- if product.featured_image.width >= 165 -%}{{ product.featured_image | image_url: width: 165 }} 165w,{%- endif -%}
+              {%- if product.featured_image.width >= 330 -%}{{ product.featured_image | image_url: width: 330 }} 330w,{%- endif -%}
+              {%- if product.featured_image.width >= 535 -%}{{ product.featured_image | image_url: width: 535 }} 535w,{%- endif -%}
+              {%- if product.featured_image.width >= 750 -%}{{ product.featured_image | image_url: width: 750 }} 750w,{%- endif -%}
+              {%- if product.featured_image.width >= 1000 -%}{{ product.featured_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+              {%- if product.featured_image.width >= 1500 -%}{{ product.featured_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+              {%- if product.featured_image.width >= 3000 -%}{{ product.featured_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+              {{ product.featured_image | image_url }} {{ product.featured_image.width }}w
+            "
+            src="{{ product.featured_image | image_url: width: 1500 }}"
+            sizes="
+              (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns }}px,
+              (min-width: 750px) {% if columns > 1 %}calc((100vw - 10rem) / 2){% else %}calc(100vw - 10rem){% endif %},
+              calc(100vw - 3rem)
+            "
+            alt="{{ product.featured_image.alt | escape }}"
+            height="{{ product.featured_image.height }}"
+            width="{{ product.featured_image.width }}"
+            loading="lazy"
+            class="motion-reduce"
+          >
+        </a>
+      </div>
+    </div>
+  {%- endif -%}
+</div>

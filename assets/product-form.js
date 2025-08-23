@@ -15,6 +15,7 @@ if (!customElements.get('product-form')) {
         if (document.querySelector('cart-drawer')) this.submitButton.setAttribute('aria-haspopup', 'dialog');
 
         this.hideErrors = this.dataset.hideErrors === 'true';
+        this.currentlyAddedProduct = null;
       }
 
       onSubmitHandler(evt) {
@@ -45,6 +46,7 @@ if (!customElements.get('product-form')) {
         fetch(`${routes.cart_add_url}`, config)
           .then((response) => response.json())
           .then((response) => {
+            this.currentlyAddedProduct = response;
             if (response.status) {
               publish(PUB_SUB_EVENTS.cartError, {
                 source: 'product-form',
@@ -100,7 +102,32 @@ if (!customElements.get('product-form')) {
             console.error(e);
           })
           .finally(() => {
+            /**
+             * Triggers an upsell event if the currently added product matches the upsell condition.
+             * @param {Array} optVariantCondition - The variant options that should trigger the upsell (e.g., ['Black', 'M']).
+             * @param {Object} currentlyAddedProduct - The product object returned from the cart add API.
+             * @param {Object} upsellProduct - The global upsell product config (should have 'enable' and 'product').
+             */
+            const optVariantCondition = ['Black', 'M'];
+            const customModal = this.closest('custom-quick-add-modal');
+            const { currentlyAddedProduct } = this;
+            const { enable, product } = window.upsellProduct;
+            const upsellEnable = enable === "true"
+            // Check if the currently added product matches the upsell triggering condition
+            const isUpsellMatch =
+              currentlyAddedProduct &&
+              currentlyAddedProduct.variant_options.includes(optVariantCondition[0]) &&
+              currentlyAddedProduct.variant_options.includes(optVariantCondition[1]);
+
+            if (isUpsellMatch && upsellEnable && product) {
+              // Dispatch a custom event to trigger the upsell add-to-cart flow
+              document.dispatchEvent(new CustomEvent('upsell:addProduct'));
+            }
+            // Close the custom quick add modal
+            customModal?.closeModal();
             this.submitButton.classList.remove('loading');
+            this.currentlyAddedProduct = null;
+
             if (this.cart && this.cart.classList.contains('is-empty')) this.cart.classList.remove('is-empty');
             if (!this.error) this.submitButton.removeAttribute('aria-disabled');
             this.querySelector('.loading__spinner').classList.add('hidden');
