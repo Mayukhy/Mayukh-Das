@@ -116,8 +116,8 @@ if (!customElements.get('product-form')) {
             // Check if the currently added product matches the upsell triggering condition
             const isUpsellMatch =
               currentlyAddedProduct &&
-              currentlyAddedProduct.variant_options.length === optVariantCondition.length &&
-              currentlyAddedProduct.variant_options.every((opt, i) => opt === optVariantCondition[i]);
+              currentlyAddedProduct.variant_options.includes(optVariantCondition[0]) &&
+              currentlyAddedProduct.variant_options.includes(optVariantCondition[1]);
 
             if (isUpsellMatch && upsellEnable && product) {
               // Dispatch a custom event to trigger the upsell add-to-cart flow

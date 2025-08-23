@@ -139,8 +139,9 @@ class CustomQuickAddModal extends HTMLElement {
   iniasilizeFirstVariantOptions() {
     //Resets the variant selection options
     this.resetVariantSelection(
-      [".custom-quick-add-modal__option-values input[type='radio']",
-       ".custom-quick-add-modal__select-options input[type='radio']"
+      [".custom-quick-add-modal__option-values.color-option input[type='radio']",
+       ".custom-quick-add-modal__select-options input[type='radio']",
+       ".custom-quick-add-modal__option-values.custom-option input[type='radio']"
       ]
     );
     // Set the first variant as selected
@@ -151,9 +152,17 @@ class CustomQuickAddModal extends HTMLElement {
    * Automatically selects the first variant option when the modal is opened
    */
   autoSelectFirstVariant() {
-    this.selectedVariants = [this.querySelectorAll(".custom-quick-add-modal__option-values input[type='radio']")[0].value,
-    this.querySelectorAll(".custom-quick-add-modal__select-options input[type='radio']")[0].value
-    ]
+    const colorRadios = this.querySelectorAll(".custom-quick-add-modal__option-values.color-option input[type='radio']");
+    const selectRadios = this.querySelectorAll(".custom-quick-add-modal__select-options input[type='radio']");
+    const customRadios = this.querySelectorAll(".custom-quick-add-modal__option-values.custom-option input[type='radio']");
+
+    this.selectedVariants = [
+      colorRadios.length > 0 ? colorRadios[0].value : null,
+      selectRadios.length > 0 ? selectRadios[0].value : null,
+      customRadios.length > 0 ? customRadios[0].value : null
+    ];
+
+    this.selectedVariants = this.selectedVariants.filter(itm => itm !== null);
     this.setCurrentVariant();
   }
 
@@ -189,11 +198,26 @@ class CustomQuickAddModal extends HTMLElement {
    */
   autoCompleteVariantOptions() {
     // Auto-complete selectedVariants if only one option is selected
-    if (this.selectedVariants.length === 1) {
-      // Find the first variant that includes the selected value
-      const found = this.productVariants.find(variant => variant.options.includes(this.selectedVariants[0]));
-      if (found) {
-        this.selectedVariants = [...found.options];
+    if (this.productVariants[0].options.length <= 3) {
+      if (this.selectedVariants.length === 1) {
+        // Find the first variant that includes the selected value
+        const found = this.productVariants.find(variant => variant.options.includes(this.selectedVariants[0]));
+        if (found) {
+          this.selectedVariants = [...found.options];
+        }
+      }
+    }
+
+    // Auto-complete selectedVariants if two options are selected
+    if (this.productVariants[0].options.length === 3) {
+      if (this.selectedVariants.length === 2) {
+        const found = this.productVariants.find(variant =>
+          variant.options.includes(this.selectedVariants[0]) &&
+          variant.options.includes(this.selectedVariants[1])
+        );
+        if (found) {
+          this.selectedVariants = [...found.options];
+        }
       }
     }
   }

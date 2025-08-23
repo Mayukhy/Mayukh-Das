@@ -73,11 +73,31 @@
             </div>
             <div class="custom-quick-add-modal__variants-container">
                 {% for option in product.options_with_values %}
+                  {% capture option_class %}
+                    {% if option.name == "Color" %}
+                      color-option
+                    {% else %}
+                      custom-option
+                    {% endif %}
+                  {% endcapture %}
+                  {% capture radio_class %}
+                    {% if option.name == "Color" %}
+                      color-radio
+                    {% endif %}
+                      modal-radio
+                  {% endcapture %}
                   {% comment %} Normal radio inputs for the options not named "Size" (for "Color") {% endcomment %}
                   {% if option.name != "Size" %}
                     <div class="custom-quick-add-modal__option">
                       <span class="radio-label custom-quick-add-modal__option-title">{{ option.name }}</span>
-                      <div data-option="Color-{{ product_form_id }}" class="custom-quick-add-modal__option-values option-group">
+                      <div 
+                      {% if option.name == "Color" %}
+                        data-option="Color-{{ product_form_id }}"
+                      {% else %}
+                        data-option="option-{{ product_form_id }}"
+                      {% endif %}
+                      class="custom-quick-add-modal__option-values
+                       {{ option_class }} option-group">
                         {% for value in option.values %}
                           <input
                           data-idx="{{ forloop.index }}"
@@ -90,7 +110,7 @@
                           class="custom-quick-add-modal__option-value" type="radio" name="option-{{ product.id }}-{{ option.name | escape }}" value="{{ value }}">
                           <label
                           for="product-{{ product.id }}-option-{{ option.name | escape }}-{{ value | escape }}"
-                          class="modal-radio">{{ value }}
+                          class="{{ radio_class }}">{{ value }}
                           {% if variant_colors and option.name == "Color" %}
                             <span
                             data-loop-id="{{ forloop.index }}"

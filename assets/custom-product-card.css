@@ -20,7 +20,7 @@
   opacity: 0;
   z-index: -1;
   width: 31.1rem;
-  height: 44.7rem;
+  min-height: 44.7rem;
   padding: 3.6rem 2rem 2.5rem 2rem;
 }
 
@@ -93,7 +93,7 @@
 
 .custom-quick-add-modal__image-container {
   aspect-ratio: 120 / 140;
-  /* height: 14rem; */
+  min-width: 12rem;
 }
 
 .custom-quick-add-modal__image-container img {
@@ -103,8 +103,10 @@
 }
 
 .custom-quick-add-modal__title {
-  margin-top: 1.3rem;
-  margin-bottom: 2.2rem;
+  margin: 0.3rem 0 1.1rem 0;
+  height: 3.8rem;
+  display: flex;
+  align-items: center;
 }
 
 .custom-quick-add-modal__price {
